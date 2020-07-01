@@ -1,9 +1,11 @@
 package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.renderscript.RenderScript;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+
+import org.parceler.Parcels;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -115,20 +119,26 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
 
         ImageView ivProfileImage;
         ImageView ivMedia;
+        ImageView ivReply;
         TextView tvBody;
         TextView tvScreenName;
         TextView tvName;
         TextView tvTime;
+        TextView tvRetweet;
+        TextView tvFavorite;
 
         // an itemView represents one row in the RV, or one tweet
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
             ivMedia = itemView.findViewById(R.id.ivMedia);
+            ivReply = itemView.findViewById(R.id.ivReply);
             tvBody = itemView.findViewById(R.id.tvBody);
             tvScreenName = itemView.findViewById(R.id.tvScreenName);
             tvName = itemView.findViewById(R.id.tvName);
             tvTime = itemView.findViewById(R.id.tvTime);
+            tvRetweet = itemView.findViewById(R.id.tvRetweet);
+            tvFavorite = itemView.findViewById(R.id.tvFavorite);
         }
 
         public void bind(Tweet tweet) {
@@ -145,6 +155,19 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
 
             tvBody.setTextColor(Color.BLACK);
             tvName.setTextColor(Color.BLACK);
+
+            tvRetweet.setText(String.valueOf(tweet.retweetCount));
+            tvFavorite.setText(String.valueOf(tweet.favoriteCount));
+
+//            ivReply.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    Intent intent = new Intent(context, ComposeActivity.class);
+//                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+//                    intent.putExtra("video_id", Parcels.wrap(videoId));
+//                    context.startActivity(intent);
+//                }
+//            });
         }
     }
 }

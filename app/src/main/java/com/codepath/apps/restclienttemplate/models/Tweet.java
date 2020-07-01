@@ -37,6 +37,12 @@ public class Tweet {
     @ColumnInfo
     public long userId;
 
+    @ColumnInfo
+    public int retweetCount;
+
+    @ColumnInfo
+    public int favoriteCount;
+
     @Ignore
     public User user;
 
@@ -58,6 +64,8 @@ public class Tweet {
         }
         tweet.user = user;
         tweet.userId = user.id;
+        tweet.retweetCount = jsonObject.getInt("retweet_count");
+        tweet.favoriteCount = jsonObject.getInt("favorite_count");
         return tweet;
     }
 

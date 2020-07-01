@@ -35,7 +35,9 @@
         android:layout_marginStart="5dp"
         android:layout_marginTop="2dp"
         android:layout_toEndOf="@id/ivProfileImage"
-        tools:text="This is my tweet!" />
+        tools:text="This is my tweet!"
+        android:autoLink="all"
+        android:linksClickable="true"/>
 
     <TextView
         android:id="@+id/tvName"
@@ -65,4 +67,53 @@
         android:layout_alignEnd="@id/tvTime"
         tools:srcCompat="@tools:sample/backgrounds/scenic"
         android:visibility="gone"/>
+
+    <ImageView
+        android:id="@+id/ivReply"
+        android:layout_width="20dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivMedia"
+        android:layout_alignStart="@id/tvBody"
+        app:srcCompat="@drawable/ic_noun_reply_1247032"
+        android:layout_marginTop="5dp" />
+
+    <ImageView
+        android:id="@+id/ivRetweet"
+        android:layout_width="20dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivMedia"
+        android:layout_alignStart="@id/tvBody"
+        app:srcCompat="@drawable/ic_vector_retweet_stroke"
+        android:layout_marginStart="115dp"
+        android:layout_marginTop="5dp"/>
+
+    <TextView
+        android:id="@+id/tvRetweet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@id/ivRetweet"
+        android:layout_alignTop="@id/ivRetweet"
+        tools:text="100"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="2dp"/>
+
+    <ImageView
+        android:id="@+id/ivFavorite"
+        android:layout_width="20dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivMedia"
+        app:srcCompat="@drawable/ic_vector_heart_stroke"
+        android:layout_alignStart="@id/tvBody"
+        android:layout_marginStart="235dp"
+        android:layout_marginTop="5dp"/>
+
+    <TextView
+        android:id="@+id/tvFavorite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@id/ivFavorite"
+        android:layout_alignTop="@id/ivFavorite"
+        tools:text="100"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="2dp" />
 </RelativeLayout>
