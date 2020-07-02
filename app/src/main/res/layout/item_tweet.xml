@@ -75,7 +75,8 @@
         android:layout_below="@+id/ivMedia"
         android:layout_alignStart="@id/tvBody"
         app:srcCompat="@drawable/ic_noun_reply_1247032"
-        android:layout_marginTop="5dp" />
+        android:layout_marginTop="5dp"
+        android:tint="#8A8A8A"/>
 
     <ImageView
         android:id="@+id/ivRetweet"
@@ -85,7 +86,7 @@
         android:layout_alignStart="@id/tvBody"
         app:srcCompat="@drawable/ic_vector_retweet_stroke"
         android:layout_marginStart="115dp"
-        android:layout_marginTop="5dp"/>
+        android:layout_marginTop="5dp" />
 
     <TextView
         android:id="@+id/tvRetweet"
@@ -105,7 +106,7 @@
         app:srcCompat="@drawable/ic_vector_heart_stroke"
         android:layout_alignStart="@id/tvBody"
         android:layout_marginStart="235dp"
-        android:layout_marginTop="5dp"/>
+        android:layout_marginTop="5dp" />
 
     <TextView
         android:id="@+id/tvFavorite"
@@ -116,4 +117,15 @@
         tools:text="100"
         android:layout_marginStart="25dp"
         android:layout_marginTop="2dp" />
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#AAAAAA"
+        android:visibility="visible"
+        android:layout_below="@+id/ivRetweet"
+        android:layout_marginTop="7dp"
+        android:layout_marginStart="-5dp"
+        android:layout_marginEnd="-5dp"/>
 </RelativeLayout>

@@ -13,11 +13,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
 import org.parceler.Parcels;
 
@@ -26,14 +29,21 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
+import okhttp3.Headers;
+
 public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder> {
 
     Context context;
     List<Tweet> tweets;
+    TwitterClient client;
+
     // Pass in the context and list of tweets
     public TweetsAdapter(Context context, List<Tweet> tweets) {
         this.context = context;
         this.tweets = tweets;
+
+        client = TwitterApp.getRestClient(context);
     }
 
     // For each row, inflate the layout for a tweet
@@ -120,6 +130,8 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         ImageView ivProfileImage;
         ImageView ivMedia;
         ImageView ivReply;
+        ImageView ivRetweet;
+        ImageView ivFavorite;
         TextView tvBody;
         TextView tvScreenName;
         TextView tvName;
@@ -133,12 +145,25 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
             ivMedia = itemView.findViewById(R.id.ivMedia);
             ivReply = itemView.findViewById(R.id.ivReply);
+            ivRetweet = itemView.findViewById(R.id.ivRetweet);
+            ivFavorite = itemView.findViewById(R.id.ivFavorite);
             tvBody = itemView.findViewById(R.id.tvBody);
             tvScreenName = itemView.findViewById(R.id.tvScreenName);
             tvName = itemView.findViewById(R.id.tvName);
             tvTime = itemView.findViewById(R.id.tvTime);
             tvRetweet = itemView.findViewById(R.id.tvRetweet);
             tvFavorite = itemView.findViewById(R.id.tvFavorite);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Tweet tweet = tweets.get(getAdapterPosition());
+
+                    Intent intent = new Intent(((TimelineActivity) context), DetailActivity.class);
+                    intent.putExtra(Tweet.class.getSimpleName(), Parcels.wrap(tweet));
+                    ((TimelineActivity) context).startActivityForResult(intent, 40);
+                }
+            });
         }
 
         public void bind(Tweet tweet) {
@@ -146,7 +171,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             tvScreenName.setText(tweet.user.screenName);
             tvName.setText(tweet.user.name);
             tvTime.setText(getRelativeTimeAgo(tweet.createdAt));
-            Glide.with(context).load(tweet.user.profileImageUrl).into(ivProfileImage);
+            Glide.with(context).load(tweet.user.profileImageUrl).transform(new CircleCrop()).into(ivProfileImage);
             ivMedia.setImageDrawable (null);
             if (tweet.mediaUrl != null) {
                 Glide.with(context).load(tweet.mediaUrl).into(ivMedia);
@@ -159,6 +184,102 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             tvRetweet.setText(String.valueOf(tweet.retweetCount));
             tvFavorite.setText(String.valueOf(tweet.favoriteCount));
 
+            if (tweet.retweeted) {
+                ivRetweet.setImageResource(R.drawable.ic_vector_retweet);
+                ivRetweet.setTag(R.drawable.ic_vector_retweet);
+            } else {
+                ivRetweet.setTag(R.drawable.ic_vector_retweet_stroke);
+            }
+
+            if (tweet.favorited) {
+                ivFavorite.setImageResource(R.drawable.ic_vector_heart);
+                ivFavorite.setTag(R.drawable.ic_vector_heart);
+            } else {
+                ivFavorite.setTag(R.drawable.ic_vector_heart_stroke);
+            }
+
+
+            ivRetweet.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Tweet tweet = tweets.get(getAdapterPosition());
+
+                    if ((int) ivRetweet.getTag() == R.drawable.ic_vector_retweet_stroke) {
+                        // tweet has not been retweeted yet, so this click must handle a retweet
+                        client.retweet(tweet.id, new JsonHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Headers headers, JSON json) {
+
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+
+                            }
+                        });
+                        ivRetweet.setImageResource(R.drawable.ic_vector_retweet);
+                        ivRetweet.setTag(R.drawable.ic_vector_retweet);
+                        tvRetweet.setText(String.valueOf(tweet.retweetCount + 1));
+                    } else {
+                        // tweet has been retweeted, so we have to undo the retweet
+                        client.unretweet(tweet.id, new JsonHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Headers headers, JSON json) {
+
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+
+                            }
+                        });
+                        ivRetweet.setImageResource(R.drawable.ic_vector_retweet_stroke);
+                        ivRetweet.setTag(R.drawable.ic_vector_retweet_stroke);
+                        tvRetweet.setText(String.valueOf(tweet.retweetCount - 1));
+                    }
+                }
+            });
+
+            ivFavorite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Tweet tweet = tweets.get(getAdapterPosition());
+
+                    if ((int) ivFavorite.getTag() == R.drawable.ic_vector_heart_stroke) {
+                        // tweet has not been liked yet, so this click must handle a like
+                        client.likeTweet(tweet.id, new JsonHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Headers headers, JSON json) {
+
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+
+                            }
+                        });
+                        ivFavorite.setImageResource(R.drawable.ic_vector_heart);
+                        ivFavorite.setTag(R.drawable.ic_vector_heart);
+                        tvFavorite.setText(String.valueOf(tweet.favoriteCount + 1));
+                    } else {
+                        // tweet has been liked, so we have to unlike the tweet
+                        client.unlikeTweet(tweet.id, new JsonHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Headers headers, JSON json) {
+
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+
+                            }
+                        });
+                        ivFavorite.setImageResource(R.drawable.ic_vector_heart_stroke);
+                        ivFavorite.setTag(R.drawable.ic_vector_heart_stroke);
+                        tvFavorite.setText(String.valueOf(tweet.favoriteCount - 1));
+                    }
+                }
+            });
 //            ivReply.setOnClickListener(new View.OnClickListener() {
 //                @Override
 //                public void onClick(View view) {

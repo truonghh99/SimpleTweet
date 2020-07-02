@@ -55,14 +55,16 @@ dependencies {
     annotationProcessor "androidx.room:room-compiler:$room_version"
     implementation 'com.facebook.stetho:stetho:1.5.1'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
-
     implementation 'com.android.support:design:22.2.0'
     implementation 'com.android.support:appcompat-v7:22.2.0'
-
     implementation 'org.parceler:parceler-api:1.1.12'
     annotationProcessor 'org.parceler:parceler:1.1.12'
-
     // Room for simple persistence with an ORM
     implementation "androidx.room:room-runtime:$roomVersion"
     annotationProcessor "androidx.room:room-compiler:$roomVersion"
+    implementation 'jp.wasabeef:glide-transformations:4.1.0'
+    // If you want to use the GPU Filters
+    implementation 'jp.co.cyberagent.android:gpuimage:2.0.4'
+    implementation 'com.google.android.material:material:1.1.0'
+    implementation "androidx.coordinatorlayout:coordinatorlayout:1.1.0"
 }
