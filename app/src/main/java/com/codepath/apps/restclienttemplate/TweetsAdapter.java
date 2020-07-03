@@ -193,6 +193,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                 ivRetweet.setImageResource(R.drawable.ic_vector_retweet);
                 ivRetweet.setTag(R.drawable.ic_vector_retweet);
             } else {
+                ivRetweet.setImageResource(R.drawable.ic_vector_retweet_stroke);
                 ivRetweet.setTag(R.drawable.ic_vector_retweet_stroke);
             }
 
@@ -200,6 +201,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                 ivFavorite.setImageResource(R.drawable.ic_vector_heart);
                 ivFavorite.setTag(R.drawable.ic_vector_heart);
             } else {
+                ivFavorite.setImageResource(R.drawable.ic_vector_heart_stroke);
                 ivFavorite.setTag(R.drawable.ic_vector_heart_stroke);
             }
 

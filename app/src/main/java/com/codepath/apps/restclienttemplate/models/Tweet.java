@@ -44,10 +44,10 @@ public class Tweet {
     public int favoriteCount;
 
     @ColumnInfo
-    public boolean retweeted;
+    public boolean retweeted = false;
 
     @ColumnInfo
-    public boolean favorited;
+    public boolean favorited = false;
 
     @Ignore
     public User user;

@@ -19,7 +19,6 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-import com.codepath.apps.restclienttemplate.databinding.ActivityComposeBinding;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
@@ -104,12 +103,16 @@ public class ComposeDialogFragment extends DialogFragment implements TextView.On
                         Log.i(TAG, "onSuccess to publish tweet");
                         try {
                             result = Tweet.fromJson(json.jsonObject);
+                            result.favorited = false;
+                            result.retweeted = false;
+
                             Log.i(TAG, "Published tweet says: " + result.body);
                             ComposeDialogListener listener = (ComposeDialogListener) getActivity();
                             listener.onFinishComposeDialog(result);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                        getActivity().onBackPressed();
                     }
 
                     @Override
@@ -127,7 +130,7 @@ public class ComposeDialogFragment extends DialogFragment implements TextView.On
             }
         });
 
-        etCompose.setOnEditorActionListener(this);
+        btnTweet.setOnEditorActionListener(this);
     }
 
     @Override
