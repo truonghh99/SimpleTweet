@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.codepath.apps.restclienttemplate.databinding.ActivityTimelineBinding;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.apps.restclienttemplate.models.TweetDao;
 import com.codepath.apps.restclienttemplate.models.TweetWithUser;
@@ -45,15 +46,19 @@ public class TimelineActivity extends AppCompatActivity {
     MenuItem miActionProgressItem;
     FloatingActionButton fab;
 
+    ActivityTimelineBinding binding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_timeline);
+//        setContentView(R.layout.activity_timeline);
+        binding = ActivityTimelineBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         client = TwitterApp.getRestClient(this);
         tweetDao = ((TwitterApp) getApplicationContext()).getMyDatabase().tweetDao();
 
-        fab = findViewById(R.id.fab);
+        fab = binding.fab;
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,7 +69,7 @@ public class TimelineActivity extends AppCompatActivity {
         });
 
 
-        swipeContainer = findViewById(R.id.swipeContainer);
+        swipeContainer = binding.swipeContainer;
         // Configure the refreshing colors
         swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
@@ -79,7 +84,7 @@ public class TimelineActivity extends AppCompatActivity {
         });
 
         // find the recycler view
-        rvTweets = findViewById(R.id.rvTweets);
+        rvTweets = binding.rvTweets;
         // initialize the list of tweets and adapter
         tweets = new ArrayList<>();
         adapter = new TweetsAdapter(this, tweets);

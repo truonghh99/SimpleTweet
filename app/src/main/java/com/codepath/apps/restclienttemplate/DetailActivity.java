@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.codepath.apps.restclienttemplate.databinding.ActivityDetailBinding;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 
 import org.parceler.Parcels;
@@ -30,22 +31,26 @@ public class DetailActivity extends AppCompatActivity {
     TextView tvRetweet;
     TextView tvFavorite;
 
+    ActivityDetailBinding binding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail);
+        //setContentView(R.layout.activity_detail);
+        binding = ActivityDetailBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        ivProfileImage = (ImageView) findViewById(R.id.ivProfileImage);
-        ivMedia = (ImageView) findViewById(R.id.ivMedia);
-        ivReply = (ImageView) findViewById(R.id.ivReply);
-        ivRetweet = (ImageView) findViewById(R.id.ivRetweet);
-        ivFavorite = (ImageView) findViewById(R.id.ivFavorite);
-        tvBody = (TextView) findViewById(R.id.tvBody);
-        tvScreenName = (TextView) findViewById(R.id.tvScreenName);
-        tvName = (TextView) findViewById(R.id.tvName);
-        tvTime = (TextView) findViewById(R.id.tvTime);
-        tvRetweet = (TextView) findViewById(R.id.tvRetweet);
-        tvFavorite = (TextView) findViewById(R.id.tvFavorite);
+        ivProfileImage = (ImageView) binding.ivProfileImage;
+        ivMedia = (ImageView) binding.ivMedia;
+        ivReply = (ImageView) binding.ivReply;
+        ivRetweet = (ImageView) binding.ivRetweet;
+        ivFavorite = (ImageView) binding.ivFavorite;
+        tvBody = (TextView) binding.tvBody;
+        tvScreenName = (TextView) binding.tvScreenName;
+        tvName = (TextView) binding.tvName;
+        tvTime = (TextView) binding.tvTime;
+        tvRetweet = (TextView) binding.tvRetweet;
+        tvFavorite = (TextView) binding.tvFavorite;
 
         tweet = (Tweet) Parcels.unwrap(getIntent().getParcelableExtra(Tweet.class.getSimpleName()));
 
