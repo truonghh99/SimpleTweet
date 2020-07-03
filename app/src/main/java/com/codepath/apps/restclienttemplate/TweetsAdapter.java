@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -223,7 +224,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                         });
                         ivRetweet.setImageResource(R.drawable.ic_vector_retweet);
                         ivRetweet.setTag(R.drawable.ic_vector_retweet);
-                        tvRetweet.setText(String.valueOf(tweet.retweetCount + 1));
+                        tvRetweet.setText(String.valueOf(++tweet.retweetCount));
                     } else {
                         // tweet has been retweeted, so we have to undo the retweet
                         client.unretweet(tweet.id, new JsonHttpResponseHandler() {
@@ -239,7 +240,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                         });
                         ivRetweet.setImageResource(R.drawable.ic_vector_retweet_stroke);
                         ivRetweet.setTag(R.drawable.ic_vector_retweet_stroke);
-                        tvRetweet.setText(String.valueOf(tweet.retweetCount - 1));
+                        tvRetweet.setText(String.valueOf(--tweet.retweetCount));
                     }
                 }
             });
@@ -264,7 +265,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                         });
                         ivFavorite.setImageResource(R.drawable.ic_vector_heart);
                         ivFavorite.setTag(R.drawable.ic_vector_heart);
-                        tvFavorite.setText(String.valueOf(tweet.favoriteCount + 1));
+                        tvFavorite.setText(String.valueOf(++tweet.favoriteCount));
                     } else {
                         // tweet has been liked, so we have to unlike the tweet
                         client.unlikeTweet(tweet.id, new JsonHttpResponseHandler() {
@@ -280,19 +281,24 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                         });
                         ivFavorite.setImageResource(R.drawable.ic_vector_heart_stroke);
                         ivFavorite.setTag(R.drawable.ic_vector_heart_stroke);
-                        tvFavorite.setText(String.valueOf(tweet.favoriteCount - 1));
+                        tvFavorite.setText(String.valueOf(--tweet.favoriteCount));
                     }
                 }
             });
-//            ivReply.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    Intent intent = new Intent(context, ComposeActivity.class);
-//                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-//                    intent.putExtra("video_id", Parcels.wrap(videoId));
-//                    context.startActivity(intent);
-//                }
-//            });
+
+            ivReply.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Tweet tweet = tweets.get(getAdapterPosition());
+                    showComposeDialog(tweet.user.screenName);
+                }
+            });
         }
+    }
+
+    private void showComposeDialog(String screenName) {
+        FragmentManager fm = ((TimelineActivity)context).getSupportFragmentManager();
+        ComposeDialogFragment composeDialogFragment = ComposeDialogFragment.newInstance(screenName);
+        composeDialogFragment.show(fm, "fragment_compose_dialog");
     }
 }

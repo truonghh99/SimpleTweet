@@ -2,6 +2,7 @@ package com.codepath.apps.restclienttemplate;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -31,7 +32,7 @@ import java.util.List;
 
 import okhttp3.Headers;
 
-public class TimelineActivity extends AppCompatActivity {
+public class TimelineActivity extends AppCompatActivity implements ComposeDialogFragment.ComposeDialogListener {
 
     public static final String TAG = "TimelineActivity";
     private final int REQUEST_CODE = 20;
@@ -63,8 +64,9 @@ public class TimelineActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getBaseContext(), ComposeActivity.class);
-                startActivityForResult(intent, REQUEST_CODE);
+//                Intent intent = new Intent(getBaseContext(), ComposeActivity.class);
+//                startActivityForResult(intent, REQUEST_CODE);
+                showComposeDialog("");
             }
         });
 
@@ -118,6 +120,12 @@ public class TimelineActivity extends AppCompatActivity {
         populateHomeTimeline();
     }
 
+    private void showComposeDialog(String replyTo) {
+        FragmentManager fm = getSupportFragmentManager();
+        ComposeDialogFragment composeDialog = ComposeDialogFragment.newInstance(replyTo);
+        composeDialog.show(fm, "fragment_compose_dialog");
+    }
+
     private void loadMoreData() {
         // 1. Send an API request to retrieve appropriate paginated data
         client.getNextPageOfTweets(new JsonHttpResponseHandler() {
@@ -154,13 +162,13 @@ public class TimelineActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.compose) {
-            // compose icon is selected
-            // navigate to compose activity
-            Intent intent = new Intent(this, ComposeActivity.class);
-            startActivityForResult(intent, REQUEST_CODE);
-            return true;
-        }
+//        if (item.getItemId() == R.id.compose) {
+//            // compose icon is selected
+//            // navigate to compose activity
+//            Intent intent = new Intent(this, ComposeActivity.class);
+//            startActivityForResult(intent, REQUEST_CODE);
+//            return true;
+//        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -224,13 +232,11 @@ public class TimelineActivity extends AppCompatActivity {
         return super.onPrepareOptionsMenu(menu);
     }
 
-    public void showProgressBar() {
-        // Show progress item
-        miActionProgressItem.setVisible(true);
-    }
-
-    public void hideProgressBar() {
-        // Hide progress item
-        miActionProgressItem.setVisible(false);
+    @Override
+    public void onFinishComposeDialog(Tweet tweet) {
+        tweets.add(0, tweet);
+        // update the adapter
+        adapter.notifyItemInserted(0);
+        rvTweets.smoothScrollToPosition(0);
     }
 }

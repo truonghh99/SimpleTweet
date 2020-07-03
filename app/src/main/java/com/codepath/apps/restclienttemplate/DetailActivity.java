@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
@@ -84,5 +85,18 @@ public class DetailActivity extends AppCompatActivity {
         } else {
             ivFavorite.setTag(R.drawable.ic_vector_heart_stroke);
         }
+
+        ivReply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showReplyDialog(tweet.user.screenName);
+            }
+        });
+    }
+
+    private void showReplyDialog(String screenName) {
+        FragmentManager fm = getSupportFragmentManager();
+        ComposeDialogFragment composeDialogFragment = ComposeDialogFragment.newInstance(screenName);
+        composeDialogFragment.show(fm, "fragment_compose_dialog");
     }
 }
